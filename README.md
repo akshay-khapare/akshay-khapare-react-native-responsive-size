@@ -15,15 +15,15 @@ A lightweight utility package for React Native that provides responsive sizing c
 ## Installation
 
 ```bash
-npm install react-native-responsive-size
+npm install @akshay-khapare/react-native-responsive-size
 # or
-yarn add react-native-responsive-size
+yarn add @akshay-khapare/react-native-responsive-size
 ```
 
 ## Usage
 
 ```typescript
-import { wp, hp, fs, spacing, radius } from 'react-native-responsive-size';
+import { wp, hp, fs, spacing, radius } from '@akshay-khapare/react-native-responsive-size';
 
 // In your StyleSheet:
 const styles = StyleSheet.create({
