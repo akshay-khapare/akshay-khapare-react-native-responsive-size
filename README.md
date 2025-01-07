@@ -2,6 +2,8 @@
 
 A lightweight utility package for React Native that provides responsive sizing calculations for width, height, font size, spacing, and border radius. Inspired by [react-native-responsive-fontSize](https://github.com/heyman333/react-native-responsive-fontSize) with additional features for comprehensive responsive layouts.
 
+> **Note**: This package was originally created for personal projects by the author. While it's primarily maintained for personal use, you're welcome to use it in your own projects if you find it helpful. The package is provided as-is, and feature requests will be evaluated based on the author's needs.
+
 ## Features
 
 - 📱 Responsive calculations based on screen dimensions
@@ -68,6 +70,14 @@ Base calculation function for responsive sizes. Used internally by other functio
 ## Example
 
 See the [example](./example/usage.tsx) for a complete implementation.
+
+## Contributing
+
+While this package is primarily maintained for personal use, bug reports and pull requests are welcome. Please note that feature requests will be evaluated based on the author's needs and use cases.
+
+## Personal Note
+
+This package was created to solve specific responsive design challenges in my personal React Native projects. I've made it public in case others find it useful for their projects. While I maintain it primarily for my own use, I'm happy to share it with the community.
 
 ## License
 
