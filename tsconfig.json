@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6", // Use ES6 for modern compatibility
+    "module": "commonjs", // CommonJS for Node.js and NPM
+    "declaration": true, // Generate type declaration files for consumers
+    "outDir": "./dist", // Output directory for compiled files
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Allow default imports from CommonJS modules
+    "skipLibCheck": true, // Skip type-checking for declaration files
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing in imports
+    "sourceMap": true, // Generate source maps for debugging
+    "types": ["jest", "node"], // Include Jest and Node.js types
+    "moduleResolution": "node", // Use Node module resolution strategy
+    "jsx": "react" // If applicable, enable React JSX support
+  },
+  "include": ["src"], // Include source files
+  "exclude": ["node_modules", "**/__tests__/*"]
+}

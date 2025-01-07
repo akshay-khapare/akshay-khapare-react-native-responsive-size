@@ -1,0 +1,46 @@
+{
+  "name": "react-native-responsive-size",
+  "version": "1.0.0",
+  "description": "A lightweight React Native utility package for responsive sizing calculations. Inspired by react-native-responsive-fontSize with extended features.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akshaykhapare/react-native-responsive-size.git"
+  },
+  "keywords": [
+    "react-native",
+    "responsive",
+    "sizing",
+    "dimensions",
+    "font-size",
+    "width",
+    "height",
+    "radius",
+    "spacing",
+    "responsive-layout",
+    "react-native-responsive"
+  ],
+  "author": "Akshay Khapare",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/akshaykhapare/react-native-responsive-size/issues"
+  },
+  "homepage": "https://github.com/akshaykhapare/react-native-responsive-size#readme",
+  "peerDependencies": {
+    "react-native": ">=0.60.0"
+  },
+  "devDependencies": {
+    "@types/react-native": "^0.72.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ]
+}
