@@ -32,7 +32,7 @@ Make sure to install `react-native-device-info` as it is a required peer depende
 ### Basic Example
 
 ```typescript
-import { wp, hp, fs, spacing, radius } from 'responsive-size';
+import { wp, hp, fs, spacing, radius } from '@akshay-khapare/react-native-responsive-size';
 
 // Width percentage (0-100)
 const containerWidth = wp(90);  // 90% of screen width
@@ -53,7 +53,7 @@ const borderRadius = radius(8); // Responsive border radius
 ### Cleanup in App.tsx
 
 ```typescript
-import { cleanup } from 'responsive-size';
+import { cleanup } from '@akshay-khapare/react-native-responsive-size';
 import { useEffect } from 'react';
 
 function App() {
