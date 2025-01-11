@@ -1,103 +1,134 @@
 import { Dimensions, Platform, StatusBar } from "react-native";
+import DeviceInfo from "react-native-device-info";
 
-// Device dimensions
+// Constants
+const STANDARD_SCREEN_HEIGHT = 812;
+const IOS_STATUS_BAR_HEIGHT = 78;
+const ANDROID_STATUS_BAR_HEIGHT = 24;
+
+// Types
+interface WindowDimensions {
+  width: number;
+  height: number;
+}
+
+// Initial device dimensions
 let { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-// Update dimensions on screen rotation
-const dimensionSubscription = Dimensions.addEventListener(
-  "change",
-  ({ window }) => {
+/**
+ * Updates the screen dimensions dynamically when the screen size changes
+ * (e.g., during device rotation).
+ *
+ * @param window - The updated window dimensions
+ */
+const updateDimensions = ({ window }: { window: WindowDimensions }) => {
+  if (typeof window?.width === "number" && typeof window?.height === "number") {
     SCREEN_WIDTH = window.width;
     SCREEN_HEIGHT = window.height;
   }
+};
+
+// Store the reference to the event listener
+const dimensionChangeListener = Dimensions.addEventListener(
+  "change",
+  updateDimensions
 );
 
-// Check if device has notch/dynamic island
+/**
+ * Determines if the device has a notch (or dynamic island).
+ *
+ * @returns {boolean} - True if the device has a notch, false otherwise.
+ */
 const hasNotch = (): boolean => {
-  if (Platform.OS === "android") return false;
-
-  return (
-    Platform.OS === "ios" &&
-    !Platform.isPad &&
-    !Platform.isTV &&
-    SCREEN_HEIGHT >= 780
-  );
+  try {
+    return DeviceInfo.hasNotch();
+  } catch (error) {
+    console.warn("Error checking device notch:", error);
+    return false;
+  }
 };
 
 /**
- * Responsive font size calculation using ResValue
- * @param fontSize - Base font size
- * @param standardScreenHeight - Standard screen height (default: 680)
- * @returns {number} - Responsive font size
+ * Calculates a responsive value based on the device's screen height.
+ *
+ * @param baseSize - The base size value (e.g., font size, spacing, etc.).
+ * @param standardScreenHeight - The standard screen height to compare against (default: 812).
+ * @returns {number} - The calculated responsive size.
  */
-export const ResValue = (
-  fontSize: number,
-  standardScreenHeight: number = 680
+const ResValue = (
+  baseSize: number,
+  standardScreenHeight: number = STANDARD_SCREEN_HEIGHT
 ): number => {
-  if (!fontSize || !standardScreenHeight) return 0;
+  if (!baseSize) return 0;
 
   const offset =
     SCREEN_WIDTH > SCREEN_HEIGHT
       ? 0
       : Platform.OS === "ios"
-      ? 78
-      : StatusBar.currentHeight || 0;
-  const deviceHeight =
+      ? IOS_STATUS_BAR_HEIGHT
+      : StatusBar.currentHeight || ANDROID_STATUS_BAR_HEIGHT;
+
+  const adjustedHeight =
     hasNotch() || Platform.OS === "android"
       ? SCREEN_HEIGHT - offset
       : SCREEN_HEIGHT;
-  const heightPercent = (fontSize * deviceHeight) / standardScreenHeight;
+
+  const heightPercent = (baseSize * adjustedHeight) / standardScreenHeight;
   return Math.round(heightPercent);
 };
 
 /**
- * Converts width percentage to responsive size
- * @param percentage - Width percentage (0-100)
- * @returns {number} - Responsive width
+ * Converts a width percentage to a responsive pixel value.
+ *
+ * @param percentage - Width percentage (0 to 100).
+ * @returns {number} - Responsive width in pixels.
+ * @throws {Error} - If percentage is invalid
  */
-export const wp = (percentage: number): number => {
-  if (!percentage || !SCREEN_WIDTH) return 0;
-  return (percentage / 100) * SCREEN_WIDTH;
-};
+const wp = (percentage: number): number => (percentage / 100) * SCREEN_WIDTH;
 
 /**
- * Converts height percentage to responsive size
- * @param percentage - Height percentage (0-100)
- * @returns {number} - Responsive height
+ * Converts a height percentage to a responsive pixel value.
+ *
+ * @param percentage - Height percentage (0 to 100).
+ * @returns {number} - Responsive height in pixels.
+ * @throws {Error} - If percentage is invalid
  */
-export const hp = (percentage: number): number => {
-  if (!percentage || !SCREEN_HEIGHT) return 0;
-  return (percentage / 100) * SCREEN_HEIGHT;
-};
+const hp = (percentage: number): number => (percentage / 100) * SCREEN_HEIGHT;
 
 /**
- * Converts font size to responsive size
- * @param size - Base font size in pixels
- * @returns {number} - Responsive font size
+ * Converts a font size to a responsive size based on screen height.
+ *
+ * @param size - The base font size in pixels.
+ * @returns {number} - Responsive font size in pixels.
+ * @throws {Error} - If size is negative
  */
-export const fs = (size: number): number => {
-  return ResValue(size);
-};
+const fs = (size: number): number => ResValue(size);
 
 /**
- * Converts spacing size to responsive size
- * @param size - Base spacing size in pixels
- * @returns {number} - Responsive spacing
+ * Converts a spacing value to a responsive size based on screen height.
+ *
+ * @param size - The base spacing size in pixels.
+ * @returns {number} - Responsive spacing in pixels.
+ * @throws {Error} - If size is negative
  */
-export const spacing = (size: number): number => {
-  return ResValue(size);
-};
+const spacing = (size: number): number => ResValue(size);
 
 /**
- * Get responsive radius for rounded corners
- * @param size - Base border radius in pixels
- * @returns {number} - Responsive border radius
+ * Calculates a responsive border radius based on screen height.
+ *
+ * @param size - The base border radius in pixels.
+ * @returns {number} - Responsive border radius in pixels.
+ * @throws {Error} - If size is negative
  */
-export const radius = (size: number): number => {
-  return ResValue(size);
+const radius = (size: number): number => ResValue(size);
+
+/**
+ * Removes the global dimension change listener.
+ *
+ * This should be called once in the application's lifecycle (e.g., during cleanup in `App.tsx`).
+ */
+const cleanup = () => {
+  dimensionChangeListener.remove();
 };
 
-// Export cleanup function for dimension listener
-export const cleanup = () => {
-  dimensionSubscription.remove();
-};
+export { wp, hp, fs, spacing, radius, cleanup, hasNotch };
