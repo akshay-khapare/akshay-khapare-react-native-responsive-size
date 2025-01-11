@@ -32,7 +32,10 @@ Make sure to install `react-native-device-info` as it is a required peer depende
 ### Basic Example
 
 ```typescript
-import { wp, hp, fs, spacing, radius } from '@akshay-khapare/react-native-responsive-size';
+import { ResValue, wp, hp, fs, spacing, radius } from '@akshay-khapare/react-native-responsive-size';
+
+// Responsive value that scales with screen height
+const buttonHeight = ResValue(50);  // Consistent 50px base height across devices
 
 // Width percentage (0-100)
 const containerWidth = wp(90);  // 90% of screen width
@@ -72,6 +75,20 @@ function App() {
 
 ### Functions
 
+- `ResValue(baseSize: number, standardScreenHeight?: number)`: Calculate responsive values that scale proportionally with screen height
+  - Perfect for creating consistent UI elements without direct width/height dependencies
+  - Automatically adjusts sizes based on device screen proportions
+  - Example uses:
+    ```typescript
+    // Button height that scales consistently across devices
+    const buttonHeight = ResValue(50);  // Base size of 50px
+    
+    // Container padding that maintains proportions
+    const padding = ResValue(20);       // Base padding of 20px
+    
+    // Custom scaling with different reference height
+    const customSize = ResValue(30, 720); // Base: 30px, Reference: 720px
+    ```
 - `wp(percentage: number)`: Convert width percentage to responsive pixels
 - `hp(percentage: number)`: Convert height percentage to responsive pixels
 - `fs(size: number)`: Convert font size to responsive size

@@ -49,11 +49,30 @@ const hasNotch = (): boolean => {
 };
 
 /**
- * Calculates a responsive value based on the device's screen height.
- *
- * @param baseSize - The base size value (e.g., font size, spacing, etc.).
- * @param standardScreenHeight - The standard screen height to compare against (default: 812).
- * @returns {number} - The calculated responsive size.
+ * Calculates a responsive value that scales proportionally with the device's screen height.
+ * This function is ideal for creating consistent UI elements across different device sizes
+ * without directly depending on the device's width or height percentages.
+ * 
+ * Use this when you want:
+ * - Consistent scaling of UI elements across different devices
+ * - Size values that maintain proportions regardless of screen dimensions
+ * - A more reliable alternative to direct width/height percentage calculations
+ * 
+ * @example
+ * // For a button height
+ * const buttonHeight = ResValue(50); // Base size of 50px
+ * 
+ * // For padding or margin
+ * const containerPadding = ResValue(20); // Base padding of 20px
+ * 
+ * // For custom scaling with different base height
+ * const customSize = ResValue(30, 720); // Base size of 30px with 720px as standard height
+ * 
+ * @param baseSize - The base size value in pixels. This is the size you want on a standard
+ *                  device (default standard height is 812px, iPhone X height).
+ * @param standardScreenHeight - Optional. The reference screen height to base calculations on.
+ *                              Defaults to 812 (iPhone X height).
+ * @returns {number} - The calculated responsive size that scales proportionally with the device screen.
  */
 const ResValue = (
   baseSize: number,
@@ -131,4 +150,4 @@ const cleanup = () => {
   dimensionChangeListener.remove();
 };
 
-export { wp, hp, fs, spacing, radius, cleanup, hasNotch };
+export { ResValue, wp, hp, fs, spacing, radius, cleanup, hasNotch };

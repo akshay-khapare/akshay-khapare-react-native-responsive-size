@@ -1,6 +1,6 @@
 {
   "name": "@akshay-khapare/react-native-responsive-size",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight React Native utility package for responsive sizing calculations. Inspired by react-native-responsive-fontSize with extended features.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
