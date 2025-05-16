@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2025-05-16
+
+### Fixed
+- Fixed critical issue with `hp` and `wp` functions to always use current device dimensions
+- Updated dimension retrieval to always get fresh values directly from the Dimensions API
+- Improved `getScreenDimensions` to return real-time device dimensions
+
 ## [1.1.0] - 2025-05-16
 
 ### Added

@@ -24,7 +24,7 @@ describe("Responsive Size Utilities", () => {
   });
 
   test("Should export correct package version", () => {
-    expect(PACKAGE_VERSION).toBe("1.1.0");
+    expect(PACKAGE_VERSION).toBe("1.1.1");
   });
 
   test("ResValue should calculate proportional size correctly", () => {

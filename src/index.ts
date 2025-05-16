@@ -2,7 +2,7 @@ import { Dimensions, Platform, StatusBar } from "react-native";
 import DeviceInfo from "react-native-device-info";
 
 // Version information
-const PACKAGE_VERSION = "1.1.0";
+const PACKAGE_VERSION = "1.1.1";
 
 // Constants
 const STANDARD_SCREEN_HEIGHT = 812;
@@ -161,6 +161,7 @@ const ResValue = (baseSize: number, standardScreenHeight?: number): number => {
 
 /**
  * Converts a width percentage to a responsive pixel value.
+ * Always uses the current device width, not the cached value.
  *
  * @param percentage - Width percentage (0 to 100).
  * @returns {number} - Responsive width in pixels.
@@ -169,16 +170,19 @@ const ResValue = (baseSize: number, standardScreenHeight?: number): number => {
 const wp = (percentage: number): number => {
   if (percentage < 0 || percentage > 100) {
     console.warn(`Invalid percentage value (${percentage}). Must be between 0-100.`);
-    return percentage < 0 ? 0 : SCREEN_WIDTH;
+    return percentage < 0 ? 0 : Dimensions.get("window").width;
   }
 
+  // Get the current width directly from Dimensions to ensure we have latest value
+  const currentWidth = Dimensions.get("window").width;
+
   // Check cache first if enabled
-  const cacheKey = `wp_${percentage}_${SCREEN_WIDTH}`;
+  const cacheKey = `wp_${percentage}_${currentWidth}`;
   if (config.enableCaching && valueCache.has(cacheKey)) {
     return valueCache.get(cacheKey) as number;
   }
 
-  const result = (percentage / 100) * SCREEN_WIDTH;
+  const result = (percentage / 100) * currentWidth;
 
   // Cache the result if caching is enabled
   if (config.enableCaching) {
@@ -190,6 +194,7 @@ const wp = (percentage: number): number => {
 
 /**
  * Converts a height percentage to a responsive pixel value.
+ * Always uses the current device height, not the cached value.
  *
  * @param percentage - Height percentage (0 to 100).
  * @returns {number} - Responsive height in pixels.
@@ -198,16 +203,19 @@ const wp = (percentage: number): number => {
 const hp = (percentage: number): number => {
   if (percentage < 0 || percentage > 100) {
     console.warn(`Invalid percentage value (${percentage}). Must be between 0-100.`);
-    return percentage < 0 ? 0 : SCREEN_HEIGHT;
+    return percentage < 0 ? 0 : Dimensions.get("window").height;
   }
 
+  // Get the current height directly from Dimensions to ensure we have latest value
+  const currentHeight = Dimensions.get("window").height;
+
   // Check cache first if enabled
-  const cacheKey = `hp_${percentage}_${SCREEN_HEIGHT}`;
+  const cacheKey = `hp_${percentage}_${currentHeight}`;
   if (config.enableCaching && valueCache.has(cacheKey)) {
     return valueCache.get(cacheKey) as number;
   }
 
-  const result = (percentage / 100) * SCREEN_HEIGHT;
+  const result = (percentage / 100) * currentHeight;
 
   // Cache the result if caching is enabled
   if (config.enableCaching) {
@@ -273,15 +281,14 @@ const cleanup = () => {
 };
 
 /**
- * Retrieves the current screen dimensions
+ * Retrieves the current screen dimensions directly from the Dimensions API
  *
  * @returns The current screen width and height
  */
 const getScreenDimensions = (): { width: number; height: number } => {
-  return {
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-  };
+  // Always get fresh dimensions directly from the API
+  const { width, height } = Dimensions.get("window");
+  return { width, height };
 };
 
 export {
