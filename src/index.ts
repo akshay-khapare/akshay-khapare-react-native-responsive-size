@@ -2,7 +2,7 @@ import { Dimensions, Platform, StatusBar } from "react-native";
 import DeviceInfo from "react-native-device-info";
 
 // Version information
-const PACKAGE_VERSION = "1.1.1";
+const PACKAGE_VERSION = "1.1.2";
 
 // Constants
 const STANDARD_SCREEN_HEIGHT = 812;
@@ -30,8 +30,10 @@ export interface ResponsiveConfig {
  */
 export type ResponsiveValue = number;
 
-// Initial device dimensions
+// Initial device dimensions - keeping these for backward compatibility
+// in case any external code is using getScreenDimensions()
 let { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+// These will be updated by the updateDimensions function
 
 // Configuration
 let config: ResponsiveConfig = {
@@ -48,7 +50,7 @@ const valueCache = new Map<string, number>();
  *
  * @param window - The updated window dimensions
  */
-const updateDimensions = ({ window }: { window: WindowDimensions }) => {
+const updateDimensions = ({ window }: { window: WindowDimensions }): void => {
   if (typeof window?.width === "number" && typeof window?.height === "number") {
     SCREEN_WIDTH = window.width;
     SCREEN_HEIGHT = window.height;
@@ -66,7 +68,7 @@ const dimensionChangeListener = Dimensions.addEventListener("change", updateDime
 /**
  * Determines if the device has a notch (or dynamic island).
  *
- * @returns {boolean} - True if the device has a notch, false otherwise.
+ * @returns {boolean} True if the device has a notch, false otherwise.
  */
 const hasNotch = (): boolean => {
   try {
@@ -103,10 +105,10 @@ const configure = (options: ResponsiveConfig): void => {
  *
  * @example
  * // For a button height
- * const buttonHeight = ResValue(50); // Base size of 50px
+ * const buttonHeight = ResValue(50);  // Base size of 50px
  *
  * // For padding or margin
- * const containerPadding = ResValue(20); // Base padding of 20px
+ * const containerPadding = ResValue(20);       // Base padding of 20px
  *
  * // For custom scaling with different base height
  * const customSize = ResValue(30, 720); // Base size of 30px with 720px as standard height
@@ -129,25 +131,32 @@ const ResValue = (baseSize: number, standardScreenHeight?: number): number => {
   // Use configured standard height if not provided
   const stdHeight = standardScreenHeight || config.standardScreenHeight || STANDARD_SCREEN_HEIGHT;
 
+  // Always get the latest dimensions to ensure accuracy
+  const { width: currentWidth, height: currentHeight } = Dimensions.get("window");
+
   // Check cache first if enabled
-  const cacheKey = `${baseSize}_${stdHeight}_${SCREEN_WIDTH}_${SCREEN_HEIGHT}`;
+  const cacheKey = `${baseSize}_${stdHeight}_${currentWidth}_${currentHeight}`;
   if (config.enableCaching && valueCache.has(cacheKey)) {
     return valueCache.get(cacheKey) as number;
   }
 
+  // Determine if we're in landscape mode
+  const isLandscape = currentWidth > currentHeight;
+
   // Calculate offset based on device orientation and platform
-  const offset =
-    SCREEN_WIDTH > SCREEN_HEIGHT
-      ? 0 // Landscape mode
-      : Platform.OS === "ios"
-      ? IOS_STATUS_BAR_HEIGHT
-      : StatusBar.currentHeight || ANDROID_STATUS_BAR_HEIGHT;
+  // No offset in landscape mode as we typically don't need to account for status bars
+  const offset = isLandscape
+    ? 0 // Landscape mode
+    : Platform.OS === "ios"
+    ? IOS_STATUS_BAR_HEIGHT
+    : StatusBar.currentHeight || ANDROID_STATUS_BAR_HEIGHT;
 
   // Adjust height for notch devices or Android
   const adjustedHeight =
-    hasNotch() || Platform.OS === "android" ? SCREEN_HEIGHT - offset : SCREEN_HEIGHT;
+    hasNotch() || Platform.OS === "android" ? currentHeight - offset : currentHeight;
 
   // Calculate proportional size
+  // This is the key to maintaining consistency across different device sizes
   const heightPercent = (baseSize * adjustedHeight) / stdHeight;
   const result = Math.round(heightPercent);
 

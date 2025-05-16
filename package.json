@@ -1,6 +1,6 @@
 {
   "name": "@akshay-khapare/react-native-responsive-size",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A production-ready, optimized React Native utility package for responsive sizing calculations with performance caching and comprehensive error handling.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

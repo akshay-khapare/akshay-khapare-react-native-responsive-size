@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2025-05-16
+
+### Enhanced
+- Improved `ResValue` function to always use real-time device dimensions
+- Better handling of device orientation and dimension changes
+- Enhanced consistency across different device sizes
+- Optimized caching mechanism for dynamic screen dimensions
+
 ## [1.1.1] - 2025-05-16
 
 ### Fixed
